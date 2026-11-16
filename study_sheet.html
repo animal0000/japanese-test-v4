@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>생활일본어 2학기 2차 수행평가 학습지 (3·4·5단원 문화) - 배재중학교</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --navy:#1A2F8A;
+        --red:#C0392B;
+        --gold:#B8860B;
+        --ink:#0f172a;
+        --muted:#64748b;
+        --line:#cbd5e1;
+        --soft:#eef2ff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+    html,body{
+        font-family:'Pretendard','Noto Sans KR',sans-serif;
+        color:var(--ink);
+        background:#e2e8f0;
+        font-size:9pt;
+        line-height:1.34;
+    }
+    .jp{font-family:'Noto Sans JP','Yu Gothic',sans-serif;}
+    .screen-bar{
+        position:sticky;top:0;z-index:50;
+        background:#fff;border-bottom:1px solid var(--line);
+        padding:10px 24px;display:flex;justify-content:space-between;align-items:center;
+        box-shadow:0 4px 12px rgba(0,0,0,.06);
+    }
+    .screen-bar .t{font-weight:800;color:var(--navy);font-size:14px;}
+    .screen-bar .sub{font-size:11px;color:var(--muted);}
+    .screen-bar button{
+        background:var(--navy);color:#fff;border:0;padding:9px 18px;border-radius:10px;
+        font-weight:800;font-size:13px;cursor:pointer;
+    }
+    @page{ size:A4 portrait; margin:0; }
+    @media print{
+        html,body{background:white !important;}
+        .no-print{display:none !important;}
+        .page{
+            box-shadow:none !important;
+            margin:0 !important;
+            page-break-after:always;
+            break-after:page;
+        }
+        .page:last-child{page-break-after:auto;break-after:auto;}
+    }
+    .page{
+        width:210mm;
+        height:297mm;
+        padding:10mm 12mm 9mm 12mm;
+        background:white;
+        margin:14px auto;
+        box-shadow:0 10px 30px rgba(26,47,138,.15);
+        position:relative;
+        overflow:hidden;
+        display:flex;
+        flex-direction:column;
+    }
+    .hdr{
+        display:flex;
+        align-items:flex-end;
+        justify-content:space-between;
+        border-bottom:3px double var(--navy);
+        padding-bottom:6px;
+        margin-bottom:7px;
+    }
+    .hdr .title{
+        display:flex;
+        align-items:center;
+        gap:9px;
+    }
+    .hdr .badge{
+        background:var(--navy);
+        color:white;
+        padding:4px 9px;
+        font-weight:900;
+        font-size:9pt;
+        letter-spacing:.05em;
+        border-radius:3px;
+    }
+    .hdr h1{
+        font-size:15.5pt;
+        font-weight:900;
+        color:var(--navy);
+        letter-spacing:-.02em;
+    }
+    .hdr h1 .red{color:var(--red);}
+    .hdr .meta{
+        text-align:right;
+        font-size:8.2pt;
+        color:var(--muted);
+        line-height:1.38;
+    }
+    .hdr .meta strong{color:var(--ink);}
+
+    .tip{
+        background:linear-gradient(90deg,#fff7e6,#fffdf5);
+        border-left:4px solid var(--gold);
+        padding:5px 10px;
+        font-size:8.3pt;
+        margin-bottom:7px;
+        color:#5a4500;
+    }
+    .tip b{color:var(--red);}
+
+    .qlist{
+        column-count:2;
+        column-gap:8mm;
+        column-rule:1px dashed var(--line);
+        flex:1;
+    }
+    .qa{
+        break-inside:avoid;
+        display:grid;
+        grid-template-columns:20px 1fr;
+        column-gap:6px;
+        padding:3px 0 3.5px;
+        border-bottom:1px dotted #e2e8f0;
+        font-size:8.25pt;
+        line-height:1.28;
+    }
+    .qa:last-child{border-bottom:none;}
+    .qa .n{
+        font-weight:900;
+        color:var(--navy);
+        font-size:8pt;
+        background:var(--soft);
+        text-align:center;
+        height:16px;
+        line-height:16px;
+        margin-top:1px;
+        border-radius:3px;
+    }
+    .qa .body .src{
+        display:inline-block;
+        font-size:7pt;
+        font-weight:800;
+        color:var(--navy);
+        background:#eef2ff;
+        border:1px solid #c7d2fe;
+        padding:0 4px;
+        border-radius:3px;
+        margin-right:4px;
+        vertical-align:0.5px;
+    }
+    .qa .body .q{
+        color:var(--ink);
+        font-weight:600;
+        word-break:keep-all;
+    }
+    .qa .body .a{
+        display:block;
+        color:var(--red);
+        font-weight:800;
+        margin-top:2px;
+        padding-left:6px;
+        border-left:2px solid var(--red);
+        font-size:8.1pt;
+        word-break:keep-all;
+    }
+    .qa .body .a::before{
+        content:"정답";
+        font-size:6.8pt;
+        background:var(--red);
+        color:white;
+        padding:0.5px 4px;
+        margin-right:5px;
+        font-weight:900;
+        border-radius:2px;
+        vertical-align:0.5px;
+    }
+
+    .ftr{
+        margin-top:6px;
+        padding-top:5px;
+        border-top:1px solid var(--line);
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        font-size:8pt;
+        color:var(--muted);
+    }
+    .ftr .stamp{
+        font-weight:900;
+        color:var(--navy);
+        letter-spacing:.08em;
+    }
+    .corner{
+        position:absolute;
+        top:0;right:0;
+        width:54px;height:54px;
+        background:var(--navy);
+        clip-path:polygon(100% 0,0 0,100% 100%);
+    }
+    .corner.red{background:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="screen-bar no-print">
+    <div>
+        <div class="t">배재중학교 · 생활일본어 2학기 2차 수행평가 학습지 (3·4·5단원 문화)</div>
+        <div class="sub">총 53문항 · A4 2쪽 고밀도 인쇄용</div>
+    </div>
+    <button onclick="window.print()">🖨️ 학습지 인쇄 / PDF 저장</button>
+</div>
+
+<!-- ═══════════════════ PAGE 1 (Q1 ~ Q27) ═══════════════════ -->
+<div class="page" id="page1">
+    <div class="corner"></div>
+    <header class="hdr">
+        <div class="title">
+            <span class="badge">학습지</span>
+            <h1>2학기 2차 수행평가 <span class="red">핵심 정리</span></h1>
+        </div>
+        <div class="meta">
+            <strong>배재중학교 · 생활일본어 (3·4·5단원 문화 파트 53문항)</strong><br>
+            학년( 2 ) 반( &nbsp;&nbsp; ) 번호( &nbsp;&nbsp; ) 이름(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+        </div>
+    </header>
+
+    <div class="tip">
+        💡 <b>학습 안내</b> &nbsp;|&nbsp; 교과서 <b>3단원(61~64쪽) · 4단원(75~78쪽) · 5단원(89~92쪽)</b> 문화 코너에서만 출제됩니다. (총 53문항 중 <b>랜덤 20문항</b> 출제)
+    </div>
+
+    <div class="qlist">
+        <div class="qa"><div class="n">1</div><div class="body">
+            <span class="src">3단원(61쪽)</span>
+            <span class="q">일본어에서 ‘나’를 나타내는 호칭 중 주로 남자가 쓰는 말은?</span>
+            <span class="a">보쿠(ぼく)</span>
+        </div></div>
+        <div class="qa"><div class="n">2</div><div class="body">
+            <span class="src">3단원(61쪽)</span>
+            <span class="q">일본어에서 ‘나’를 나타내는 호칭 중 남녀 모두 쓸 수 있는 말은?</span>
+            <span class="a">와타시(わたし)</span>
+        </div></div>
+        <div class="qa"><div class="n">3</div><div class="body">
+            <span class="src">3단원(61쪽)</span>
+            <span class="q">일본에서 상대방을 부를 때 성 뒤에 붙여서 부르며, 학생에게 붙여서 부르기도 하는 호칭은?</span>
+            <span class="a">-상(-さん)</span>
+        </div></div>
+        <div class="qa"><div class="n">4</div><div class="body">
+            <span class="src">3단원(61쪽)</span>
+            <span class="q">일본에서 친한 사이에 상대방의 이름 뒤에 붙여서 부르는 호칭 두 가지는?</span>
+            <span class="a">-짱(-ちゃん), -군(-くん)</span>
+        </div></div>
+        <div class="qa"><div class="n">5</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본의 중학교는 몇 월에 입학식을 하는가?</span>
+            <span class="a">4월</span>
+        </div></div>
+        <div class="qa"><div class="n">6</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본의 중학교는 일반적으로 몇 월에 졸업식을 하는가?</span>
+            <span class="a">3월</span>
+        </div></div>
+        <div class="qa"><div class="n">7</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본의 대부분의 중학교는 1년에 몇 학기로 운영되는가?</span>
+            <span class="a">3학기</span>
+        </div></div>
+        <div class="qa"><div class="n">8</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본의 중학교에서는 어느 계절에 학교 축제와 체육 대회 등을 하는가?</span>
+            <span class="a">가을</span>
+        </div></div>
+        <div class="qa"><div class="n">9</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본 중학교의 방학 기간은 어떤 특징이 있는가?</span>
+            <span class="a">여름 방학이 길고 겨울/봄 방학이 짧다</span>
+        </div></div>
+        <div class="qa"><div class="n">10</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본 중학생들이 등교할 때 많이 타고 다니는 이동 수단은?</span>
+            <span class="a">자전거</span>
+        </div></div>
+        <div class="qa"><div class="n">11</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본의 중학교 현관에는 대부분 개인 신발장이 있어 등교 후 무엇으로 갈아 신는가?</span>
+            <span class="a">실내화</span>
+        </div></div>
+        <div class="qa"><div class="n">12</div><div class="body">
+            <span class="src">3단원(62쪽)</span>
+            <span class="q">일본 중학교의 정규 수업에서 하기도 하는 두 가지 과목(활동)은?</span>
+            <span class="a">서예, 수영</span>
+        </div></div>
+        <div class="qa"><div class="n">13</div><div class="body">
+            <span class="src">3단원(63쪽)</span>
+            <span class="q">일본 중학교에서 급식 외에 학생들이 점심을 해결하는 두 가지 방법은?</span>
+            <span class="a">학교 식당에서 사 먹기, 집에서 도시락 싸 오기</span>
+        </div></div>
+        <div class="qa"><div class="n">14</div><div class="body">
+            <span class="src">3단원(63쪽)</span>
+            <span class="q">일본 중학생들이 방과 후에 대부분 참여하는 ‘동아리 활동’을 일본어로 무엇이라고 하는가?</span>
+            <span class="a">부카쓰(ぶかつ)</span>
+        </div></div>
+        <div class="qa"><div class="n">15</div><div class="body">
+            <span class="src">3단원(63쪽)</span>
+            <span class="q">일본 중학교의 동아리 활동은 크게 어떤 두 부서로 나누어져 있는가?</span>
+            <span class="a">운동부, 문화부</span>
+        </div></div>
+        <div class="qa"><div class="n">16</div><div class="body">
+            <span class="src">3단원(64쪽)</span>
+            <span class="q">일본의 중·고등학교에서 졸업식 날에 좋아하는 사람에게 남학생 교복의 무엇을 주거나 받는 풍습이 있는가?</span>
+            <span class="a">두 번째 단추</span>
+        </div></div>
+        <div class="qa"><div class="n">17</div><div class="body">
+            <span class="src">3단원(64쪽)</span>
+            <span class="q">졸업식 날 교복의 두 번째 단추를 주고받는 이유는 두 번째 단추가 어디와 가장 가까워 ‘좋아하는 사람의 마음을 받는다’는 의미가 있기 때문인가?</span>
+            <span class="a">심장</span>
+        </div></div>
+        <div class="qa"><div class="n">18</div><div class="body">
+            <span class="src">4단원(75쪽)</span>
+            <span class="q">일본 사람들이 남에게 무엇인가를 권할 때 즐겨 쓰는 정중한 표현은?</span>
+            <span class="a">도조(どうぞ)</span>
+        </div></div>
+        <div class="qa"><div class="n">19</div><div class="body">
+            <span class="src">4단원(75쪽)</span>
+            <span class="q">「どうぞ」가 쓰이는 상황별 의미 다섯 가지(교과서 75쪽 기준) 중 두 가지 이상을 쓰시오.</span>
+            <span class="a">드세요, 들어오세요, 받으세요, 앉으세요, 먼저 내리세요 (중 2가지 이상)</span>
+        </div></div>
+        <div class="qa"><div class="n">20</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">일본의 신사나 절에 가서 운세를 보기 위해 뽑는 것은?</span>
+            <span class="a">오미쿠지</span>
+        </div></div>
+        <div class="qa"><div class="n">21</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">일본의 신사나 절에서 소원을 쓰는 오각형 나무판은?</span>
+            <span class="a">에마</span>
+        </div></div>
+        <div class="qa"><div class="n">22</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">행운이나 건강을 기원하기 위해 구입하는 일본의 부적은?</span>
+            <span class="a">오마모리</span>
+        </div></div>
+        <div class="qa"><div class="n">23</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">행운과 좋은 인연을 부르며 가게 등에 놓아 두는 고양이 장식물은?</span>
+            <span class="a">마네키네코</span>
+        </div></div>
+        <div class="qa"><div class="n">24</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">합격이나 당선 등을 기원할 때 자주 사용하며, 소원을 빌 때와 이루어졌을 때 눈을 그려 넣는 인형은?</span>
+            <span class="a">다루마</span>
+        </div></div>
+        <div class="qa"><div class="n">25</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">‘다루마’에 소원을 빌면서 먼저 그려 넣는 눈은 어느 쪽이고, 소원이 이루어지면 그려 넣는 눈은 어느 쪽인가?</span>
+            <span class="a">소원을 빌 때: 왼쪽 눈 / 이루어지면: 오른쪽 눈</span>
+        </div></div>
+        <div class="qa"><div class="n">26</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">비가 오지 않기를 바라며 창문에 걸어 두는 일본의 인형은?</span>
+            <span class="a">데루테루보즈</span>
+        </div></div>
+        <div class="qa"><div class="n">27</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">‘데루테루보즈’ 인형을 거꾸로 매달면 어떤 의미가 되는가?</span>
+            <span class="a">비가 오기를 기원하는 의미</span>
+        </div></div>
+    </div>
+
+    <footer class="ftr">
+        <span>생활일본어 2학기 2차 수행평가 학습지 · 1/2 (1~27번 · 3단원 17문항 + 4단원 전반 10문항)</span>
+        <span class="stamp">배재중학교 일본어과</span>
+        <span>※ 교과서 본문 내용만 출제</span>
+    </footer>
+</div>
+
+<!-- ═══════════════════ PAGE 2 (Q28 ~ Q53) ═══════════════════ -->
+<div class="page" id="page2">
+    <div class="corner red"></div>
+    <header class="hdr">
+        <div class="title">
+            <span class="badge" style="background:var(--red);">학습지</span>
+            <h1>2학기 2차 수행평가 <span class="red">핵심 정리</span></h1>
+        </div>
+        <div class="meta">
+            <strong>배재중학교 · 생활일본어 (3·4·5단원 문화 파트 53문항)</strong><br>
+            28~53번 · 4단원 후반 10문항 + 5단원 16문항
+        </div>
+    </header>
+
+    <div class="tip">
+        ✅ <b>셀프 체크</b> &nbsp;|&nbsp; 빨간 정답 박스를 가리고 우리말 단답형으로 떠올려 보세요. 웹 모의시험(20문항)으로도 실전처럼 점검할 수 있습니다.
+    </div>
+
+    <div class="qlist">
+        <div class="qa"><div class="n">28</div><div class="body">
+            <span class="src">4단원(76쪽)</span>
+            <span class="q">우리나라의 복조리와 같은 것으로, 곡식을 긁어모으듯이 복을 긁어모은다는 의미로 사업 번창 등을 기원하는 물건은?</span>
+            <span class="a">구마데</span>
+        </div></div>
+        <div class="qa"><div class="n">29</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">일본에서 칠석(7월 7일)을 부르는 말은?</span>
+            <span class="a">다나바타</span>
+        </div></div>
+        <div class="qa"><div class="n">30</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">칠석(7월 7일)인 ‘다나바타’에 소원을 써서 대나무에 매다는 종이를 무엇이라고 하는가?</span>
+            <span class="a">단자쿠</span>
+        </div></div>
+        <div class="qa"><div class="n">31</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">매년 8월 6일~8일에 열리는 ‘다나바타 마쓰리’로 유명한 일본의 지역(도시)은?</span>
+            <span class="a">센다이</span>
+        </div></div>
+        <div class="qa"><div class="n">32</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">‘이기다(かつ)’라는 말이 들어 있어서 시험이나 시합을 앞두고 합격을 기원하며 먹는 음식은?</span>
+            <span class="a">돈가스, 돈가스덮밥(가쓰동)</span>
+        </div></div>
+        <div class="qa"><div class="n">33</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">‘놓아두면 패스(おくと パス)’라는 말과 발음이 같아 시험에서 좋은 결과를 바라며 수험생에게 선물하는 것은?</span>
+            <span class="a">문어(옥토퍼스)</span>
+        </div></div>
+        <div class="qa"><div class="n">34</div><div class="body">
+            <span class="src">4단원(77쪽)</span>
+            <span class="q">일본어로 ‘합격(ごうかく)’과 발음이 비슷하여 시험 합격을 연상시키기 때문에 수험생 선물로 인기가 많은 물건은?</span>
+            <span class="a">오각형(고카쿠) 연필</span>
+        </div></div>
+        <div class="qa"><div class="n">35</div><div class="body">
+            <span class="src">4단원(78쪽)</span>
+            <span class="q">일본에서 러키세븐의 7, 홀수와 함께 끝부분이 넓어지는 모양(八)이라서 운이 좋다고 생각하는 숫자는?</span>
+            <span class="a">8</span>
+        </div></div>
+        <div class="qa"><div class="n">36</div><div class="body">
+            <span class="src">4단원(78쪽)</span>
+            <span class="q">일본에서 ‘죽음(死, し)’을 연상시켜 운이 나쁘다고 생각하는 숫자와 ‘고통(苦, く)’을 연상시켜 운이 나쁘다고 생각하는 숫자는?</span>
+            <span class="a">4(죽음), 9(고통)</span>
+        </div></div>
+        <div class="qa"><div class="n">37</div><div class="body">
+            <span class="src">4단원(78쪽)</span>
+            <span class="q">일본의 마트 등에서 판매 가격의 끝자리 숫자로 9가 아닌 많이 쓰는 숫자는?</span>
+            <span class="a">8</span>
+        </div></div>
+        <div class="qa"><div class="n">38</div><div class="body">
+            <span class="src">5단원(89쪽)</span>
+            <span class="q">일본에서 식사하기 전에 “잘 먹겠습니다”라는 뜻으로 하는 인사말은?</span>
+            <span class="a">이타다키마스(いただきます)</span>
+        </div></div>
+        <div class="qa"><div class="n">39</div><div class="body">
+            <span class="src">5단원(89쪽)</span>
+            <span class="q">일본에서 식사한 후에 “잘 먹었습니다”라는 뜻으로 하는 인사말은?</span>
+            <span class="a">고치소사마데시타(ごちそうさまでした)</span>
+        </div></div>
+        <div class="qa"><div class="n">40</div><div class="body">
+            <span class="src">5단원(89쪽)</span>
+            <span class="q">일본에서 식사할 때 일반적으로 사용하는 식사 도구는?</span>
+            <span class="a">젓가락</span>
+        </div></div>
+        <div class="qa"><div class="n">41</div><div class="body">
+            <span class="src">5단원(89쪽)</span>
+            <span class="q">일본의 식사 예절에서 젓가락으로 하면 안 되는 행동 네 가지 중 두 개 이상을 쓰시오.</span>
+            <span class="a">음식 건네기, 음식 꽂아 먹기, 그릇 당기기, 그릇 위에 올려놓기 (중 2개 이상)</span>
+        </div></div>
+        <div class="qa"><div class="n">42</div><div class="body">
+            <span class="src">5단원(89쪽)</span>
+            <span class="q">일본에서는 밥을 먹을 때와 국을 마실 때 그릇을 어떻게 하고 먹는가?</span>
+            <span class="a">밥그릇은 손에 들고 먹고, 국그릇은 입에 대고 마신다</span>
+        </div></div>
+        <div class="qa"><div class="n">43</div><div class="body">
+            <span class="src">5단원(90쪽)</span>
+            <span class="q">일본의 초밥은 만드는 모양에 따라 어떤 종류들이 있는가? (2개 이상 쓰시오)</span>
+            <span class="a">니기리즈시, 후토마키, 데마리즈시, 지라시즈시 (중 2개 이상)</span>
+        </div></div>
+        <div class="qa"><div class="n">44</div><div class="body">
+            <span class="src">5단원(90쪽)</span>
+            <span class="q">일본의 덮밥은 밥에 얹는 재료에 따라 어떤 종류들이 있는가? (2개 이상 쓰시오)</span>
+            <span class="a">소고기덮밥, 돈가스덮밥, 닭고기계란덮밥, 튀김덮밥 (중 2개 이상)</span>
+        </div></div>
+        <div class="qa"><div class="n">45</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">채소를 끓인 물에 얇은 소고기를 넣어 젓가락으로 집어 육수에 두세 번 흔들어 익혀 소스에 찍어 먹는 일본의 고기 요리는?</span>
+            <span class="a">샤부샤부</span>
+        </div></div>
+        <div class="qa"><div class="n">46</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">간장과 설탕으로 맛을 낸 진한 육수에 다양한 채소와 고기를 함께 넣고 끓여 날달걀에 찍어서 먹기도 하는 일본의 고기 요리는?</span>
+            <span class="a">스키야키</span>
+        </div></div>
+        <div class="qa"><div class="n">47</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">콩을 발효한 음식으로 우리나라의 청국장과 비슷한 일본 음식은?</span>
+            <span class="a">낫토</span>
+        </div></div>
+        <div class="qa"><div class="n">48</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">다양한 채소를 절여서 만드는 일본의 자주 먹는 반찬은?</span>
+            <span class="a">쓰케모노</span>
+        </div></div>
+        <div class="qa"><div class="n">49</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">일본의 가정식에서 젓가락은 어느 방향으로 놓는가?</span>
+            <span class="a">가로 방향</span>
+        </div></div>
+        <div class="qa"><div class="n">50</div><div class="body">
+            <span class="src">5단원(91쪽)</span>
+            <span class="q">일본의 가정식에서 가족이 함께 식사할 때 상차림의 특징과 음식을 먹을 때의 예의는?</span>
+            <span class="a">개인별로 상을 차리기도 하며, 음식은 남기지 않는 것이 예의이다</span>
+        </div></div>
+        <div class="qa"><div class="n">51</div><div class="body">
+            <span class="src">5단원(92쪽)</span>
+            <span class="q">일본에서 행운을 부르는 동물인 여우가 좋아한다고 여겨 ‘유부’를 넣은 우동을 부르는 이름은?</span>
+            <span class="a">기쓰네(여우)우동</span>
+        </div></div>
+        <div class="qa"><div class="n">52</div><div class="body">
+            <span class="src">5단원(92쪽)</span>
+            <span class="q">튀김 부스러기를 넣은 우동을 부르는 이름은?</span>
+            <span class="a">다누키(너구리)우동</span>
+        </div></div>
+        <div class="qa"><div class="n">53</div><div class="body">
+            <span class="src">5단원(92쪽)</span>
+            <span class="q">달에 비유한 날달걀을 넣은 우동과 구운 떡을 넣은 우동을 각각 무엇이라고 부르는가?</span>
+            <span class="a">날달걀: 쓰키미(달구경)우동 / 구운 떡: 지카라(힘)우동</span>
+        </div></div>
+    </div>
+
+    <footer class="ftr">
+        <span>생활일본어 2학기 2차 수행평가 학습지 · 2/2 (28~53번 · 4단원 후반 10문항 + 5단원 16문항)</span>
+        <span class="stamp">배재중학교 일본어과</span>
+        <span>크고자 하거든 남을 섬기라</span>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>교사용 실제시험 송출 및 정답 관리 (문화) | 배재중학교 생활일본어</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1A2F8A;
+  --navy2: #122466;
+  --red: #C0392B;
+  --green: #198754;
+  --ink: #171A22;
+  --muted: #637083;
+  --line: #DDE3EF;
+  --bg: #F5F7FB;
+  --card: #FFFFFF;
+  --radius: 20px;
+  --shadow: 0 16px 40px rgba(26, 47, 138, 0.08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+.jp { font-family: "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif; }
+.shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 60px; }
+
+/* Top Header */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 14px 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  margin-bottom: 24px;
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 900; color: var(--navy); font-size: 18px; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 12px;
+  background: var(--navy); color: #fff;
+  display: grid; place-items: center; font-size: 15px; font-weight: 900;
+}
+.status-pill {
+  padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 800;
+  background: #E8F6EE; color: #187044; border: 1px solid #B8E4C9;
+}
+
+/* Card layout */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  margin-bottom: 24px;
+}
+h2 { color: var(--navy); margin: 0 0 8px; font-size: 24px; font-weight: 800; }
+p.desc { color: var(--muted); margin: 0 0 20px; font-size: 15px; line-height: 1.6; }
+
+/* Setup Controls */
+.setup-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .setup-grid { grid-template-columns: 1fr; } }
+
+.field-group { margin-bottom: 18px; }
+.field-label { display: block; font-weight: 800; font-size: 14px; color: #475569; margin-bottom: 8px; }
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip {
+  border: 1px solid var(--line); background: #fff;
+  padding: 8px 16px; border-radius: 12px; font-weight: 800; font-size: 14px;
+  cursor: pointer; transition: all 0.15s;
+}
+.chip:hover { background: #EEF2FA; color: var(--navy); }
+.chip.active { background: var(--navy); color: #fff; border-color: var(--navy); box-shadow: 0 4px 12px rgba(26,47,138,0.25); }
+
+.text-input {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; font-size: 15px; font-weight: 700; color: var(--ink);
+}
+.text-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,47,138,0.1); }
+
+.select-row { display: flex; gap: 12px; }
+.select-row > div { flex: 1; }
+.select-row select {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; font-size: 14px; font-weight: 800; background: #fff;
+  margin-top: 6px;
+}
+
+/* Action Buttons */
+.btn {
+  border: 0; border-radius: 14px; padding: 14px 22px; font-weight: 900; font-size: 16px;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s; touch-action: manipulation;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--navy); color: #fff; box-shadow: 0 8px 20px rgba(26,47,138,0.25); }
+.btn-primary:hover { background: var(--navy2); }
+.btn-secondary { background: #EEF2FA; color: var(--navy); }
+.btn-secondary:hover { background: #E0E7F5; }
+.btn-drive { background: #0F9D58; color: #fff; box-shadow: 0 8px 20px rgba(15,157,88,0.25); }
+.btn-drive:hover { background: #0B8043; }
+.btn-print { background: #334155; color: #fff; }
+.btn-print:hover { background: #1E293B; }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+
+/* Stage (Exam TV Mode) */
+#stageView {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #F8FAFC; z-index: 1000;
+  padding: 24px; flex-direction: column;
+}
+.stage-head {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 14px 24px;
+  margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+.stage-title { font-size: 22px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 12px; }
+.stage-badges { display: flex; gap: 10px; align-items: center; }
+.badge { padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 900; background: #EEF2FA; color: var(--navy); }
+.badge.timer { min-width: 65px; text-align: center; background: #FFF4E6; color: #B45309; font-size: 18px; }
+.badge.timer.urgent { background: #FDE8E8; color: var(--red); animation: pulse 0.5s infinite alternate; }
+@keyframes pulse { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+.progressbar { height: 10px; background: #E2E8F0; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+.progressbar-bar { height: 100%; background: var(--navy); width: 100%; transition: width 1s linear; }
+
+.stage-screen {
+  flex: 1; min-height: 360px; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; background: #fff; border: 3px solid var(--navy);
+  border-radius: 28px; box-shadow: 0 20px 60px rgba(26,47,138,0.12);
+  padding: 36px 48px; margin-bottom: 16px;
+}
+.stage-qnum { font-size: 24px; font-weight: 900; color: var(--muted); margin-bottom: 16px; letter-spacing: 0.03em; }
+.stage-prompt {
+  font-size: clamp(32px, 5vw, 64px); font-weight: 900; color: #0F172A;
+  line-height: 1.3; word-break: keep-all; overflow-wrap: anywhere;
+  max-width: 100%; margin: 8px 0;
+}
+.stage-prompt.prep { font-size: clamp(52px, 9vw, 96px); color: var(--navy); }
+.stage-help { font-size: 20px; color: var(--muted); font-weight: 700; margin-top: 24px; word-break: keep-all; }
+
+.stage-controls {
+  display: flex; justify-content: center; gap: 12px;
+  background: #fff; border: 1px solid var(--line); border-radius: 18px;
+  padding: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+/* Result / Answer Sheet View */
+#resultView { display: none; }
+.result-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 2px solid var(--navy); padding-bottom: 16px; margin-bottom: 20px;
+}
+.result-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.answer-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.answer-table th, .answer-table td { border: 1px solid #CBD5E1; padding: 12px 14px; text-align: left; }
+.answer-table th { background: #F1F5F9; color: #334155; font-size: 13px; font-weight: 800; text-align: center; }
+.answer-table td.num { text-align: center; font-weight: 900; width: 50px; color: #64748B; }
+.answer-table td.dir { text-align: center; font-size: 12px; font-weight: 800; width: 110px; color: #0284C7; white-space: nowrap; }
+.answer-table td.q { font-weight: 800; font-size: 16px; color: var(--navy); line-height: 1.45; word-break: keep-all; }
+.answer-table td.a { font-weight: 900; font-size: 16px; color: var(--red); line-height: 1.45; word-break: keep-all; }
+
+.drive-alert {
+  padding: 16px 20px; border-radius: 14px; background: #E8F6EE; color: #187044;
+  border: 1px solid #B8E4C9; font-weight: 800; margin-bottom: 20px; display: none;
+}
+.drive-alert a { color: #0F9D58; font-weight: 900; text-decoration: underline; margin-left: 8px; }
+
+/* Print Mode */
+@media print {
+  body { background: #fff !important; padding: 0 !important; color: #000 !important; }
+  .topbar, .setup-grid, .stage-controls, .result-actions, #stageView, .no-print { display: none !important; }
+  #resultView { display: block !important; padding: 0 !important; }
+  .card { box-shadow: none !important; border: 0 !important; padding: 0 !important; }
+  .answer-table th { background: #EEE !important; -webkit-print-color-adjust: exact; }
+  .answer-table td.a { color: #B91C1C !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell no-print">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">培材</div>
+      <div>생활일본어 수행평가 2 (문화) · 교사용 송출기</div>
+    </div>
+    <div class="status-pill">☁️ 구글 드라이브 자동 저장 연결됨</div>
+  </header>
+
+  <div class="card" id="setupCard">
+    <h2>2학기 2차 수행평가 실제시험 송출 (3·4·5단원 문화)</h2>
+    <p class="desc">
+      3·4·5단원 교과서 문화 파트 53개 문항에서 <b>고유 20문항</b>을 랜덤 추출합니다.<br>
+      시험이 끝나면 <b>구글 드라이브 지정 폴더로 정답표가 즉시 자동 저장</b>됩니다.
+    </p>
+
+    <div class="setup-grid">
+      <div>
+        <div class="field-group">
+          <label class="field-label">학급 선택 (또는 직접 입력)</label>
+          <div class="chip-group" id="classChips">
+            <button type="button" class="chip active" data-class="2학년 2반">2-2</button>
+            <button type="button" class="chip" data-class="2학년 3반">2-3</button>
+            <button type="button" class="chip" data-class="2학년 4반">2-4</button>
+            <button type="button" class="chip" data-class="2학년 5반">2-5</button>
+            <button type="button" class="chip" data-class="2학년 6반">2-6</button>
+            <button type="button" class="chip" data-class="2학년 7반">2-7</button>
+            <button type="button" class="chip" data-class="2학년 8반">2-8</button>
+            <button type="button" class="chip" data-class="2학년 9반">2-9</button>
+          </div>
+          <input type="text" id="customClassInput" class="text-input" value="2학년 2반" placeholder="예: 2학년 3반 (2차시)">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">회차 메모 (선택사항)</label>
+          <input type="text" id="roundMemoInput" class="text-input" placeholder="예: 3교시 본시험 / 재응시 등">
+        </div>
+      </div>
+
+      <div>
+        <div class="field-group">
+          <label class="field-label">시험 타이머 설정</label>
+          <div class="select-row">
+            <div>
+              <span style="font-size:12px; color:var(--muted); font-weight:700;">시작 전 준비</span>
+              <select id="prepTimeSelect">
+                <option value="3">3초</option>
+                <option value="5" selected>5초 (기본)</option>
+                <option value="10">10초</option>
+              </select>
+            </div>
+            <div>
+              <span style="font-size:12px; color:var(--muted); font-weight:700;">문항당 표시 시간</span>
+              <select id="qTimeSelect">
+                <option value="8">8초</option>
+                <option value="10" selected>10초 (기본)</option>
+                <option value="12">12초</option>
+                <option value="15">15초</option>
+                <option value="20">20초</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <button type="button" id="startExamBtn" class="btn btn-primary" style="width: 100%; font-size: 18px; padding: 18px;">
+            🚀 실제시험 시작 (교실 TV 송출)
+          </button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <a class="btn btn-ghost" href="./notice.pdf" target="_blank" rel="noopener" style="flex:1; font-size:13px; padding:10px 12px; text-decoration:none;">📢 학급 안내문 PDF</a>
+            <a class="btn btn-ghost" href="./answer_sheet.html" target="_blank" rel="noopener" style="flex:1; font-size:13px; padding:10px 12px; text-decoration:none;">📝 20칸 답안지</a>
+            <a class="btn btn-ghost" href="./study_guide.pdf" target="_blank" rel="noopener" style="flex:1; font-size:13px; padding:10px 12px; text-decoration:none;">📖 학습지 PDF</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stage View (Exam TV Fullscreen) -->
+<div id="stageView">
+  <div class="stage-head">
+    <div class="stage-title">
+      <span class="brand-mark" style="width:32px; height:32px; font-size:13px;">培材</span>
+      <span id="stageClassBadge">2학년 2반</span>
+      <span style="color:var(--muted); font-size:16px;">생활일본어 수행평가 2 (문화)</span>
+    </div>
+    <div class="stage-badges">
+      <div id="stageDirBadge" class="badge">준비</div>
+      <div id="stageCounterBadge" class="badge">0 / 20</div>
+      <div id="stageTimerBadge" class="badge timer">5</div>
+    </div>
+  </div>
+
+  <div class="progressbar">
+    <div id="timeProgressBar" class="progressbar-bar"></div>
+  </div>
+
+  <div class="stage-screen" id="stageScreen">
+    <div id="stageQNum" class="stage-qnum">생활일본어 문화 수행평가 · 준비</div>
+    <div id="stagePrompt" class="stage-prompt prep">준비</div>
+    <div id="stageHelp" class="stage-help">답안지를 준비하세요. 곧 시험이 시작됩니다.</div>
+  </div>
+
+  <div class="stage-controls">
+    <button type="button" id="prevBtn" class="btn btn-secondary">← 이전 문항</button>
+    <button type="button" id="pauseBtn" class="btn btn-primary">일시정지 (Space)</button>
+    <button type="button" id="nextBtn" class="btn btn-secondary">다음 문항 →</button>
+    <button type="button" id="abortBtn" class="btn btn-danger">시험 중단</button>
+  </div>
+</div>
+
+<!-- Result & Archiving View -->
+<div class="shell" id="resultView">
+  <div class="card">
+    <div class="result-header">
+      <div>
+        <h2>2026학년도 2학기 생활일본어 수행평가 2 (문화) 정답표</h2>
+        <div style="color:var(--muted); font-size:14px; margin-top:4px;">
+          배재중학교 2학년 · 시행일시: <span id="resDate"></span>
+        </div>
+      </div>
+      <div class="badge" id="resClassBadge" style="font-size:18px; padding:8px 16px;">2학년 2반</div>
+    </div>
+
+    <div id="driveAlert" class="drive-alert">
+      <span>✅ <b>선생님 학교 구글 드라이브에 자동 저장되었습니다!</b></span>
+      <a id="driveFileLink" href="#" target="_blank">📄 드라이브에서 열기</a>
+    </div>
+
+    <div class="result-actions no-print">
+      <button type="button" id="saveDriveBtn" class="btn btn-drive">
+        ☁️ 구글 드라이브에 저장
+      </button>
+      <button type="button" id="downloadHtmlBtn" class="btn btn-secondary">
+        💾 PC에 파일 다운로드
+      </button>
+      <button type="button" id="printResultBtn" class="btn btn-print">
+        🖨️ 정답표 인쇄 / PDF 저장
+      </button>
+      <button type="button" id="newExamBtn" class="btn btn-ghost" style="margin-left:auto;">
+        🔄 다른 반 시험 시작
+      </button>
+    </div>
+
+    <table class="answer-table">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>단원(쪽)</th>
+          <th>시험 문제</th>
+          <th>정답</th>
+        </tr>
+      </thead>
+      <tbody id="answerTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const UNITS = [{"id":"CU001","unit":"3단원","page":"61쪽","source":"3단원(61쪽)","q":"일본어에서 ‘나’를 나타내는 호칭 중 주로 남자가 쓰는 말은?","a":"보쿠(ぼく)"},{"id":"CU002","unit":"3단원","page":"61쪽","source":"3단원(61쪽)","q":"일본어에서 ‘나’를 나타내는 호칭 중 남녀 모두 쓸 수 있는 말은?","a":"와타시(わたし)"},{"id":"CU003","unit":"3단원","page":"61쪽","source":"3단원(61쪽)","q":"일본에서 상대방을 부를 때 성 뒤에 붙여서 부르며, 학생에게 붙여서 부르기도 하는 호칭은?","a":"-상(-さん)"},{"id":"CU004","unit":"3단원","page":"61쪽","source":"3단원(61쪽)","q":"일본에서 친한 사이에 상대방의 이름 뒤에 붙여서 부르는 호칭 두 가지는?","a":"-짱(-ちゃん), -군(-くん)"},{"id":"CU005","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본의 중학교는 몇 월에 입학식을 하는가?","a":"4월"},{"id":"CU006","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본의 중학교는 일반적으로 몇 월에 졸업식을 하는가?","a":"3월"},{"id":"CU007","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본의 대부분의 중학교는 1년에 몇 학기로 운영되는가?","a":"3학기"},{"id":"CU008","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본의 중학교에서는 어느 계절에 학교 축제와 체육 대회 등을 하는가?","a":"가을"},{"id":"CU009","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본 중학교의 방학 기간은 어떤 특징이 있는가?","a":"여름 방학이 길고 겨울/봄 방학이 짧다"},{"id":"CU010","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본 중학생들이 등교할 때 많이 타고 다니는 이동 수단은?","a":"자전거"},{"id":"CU011","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본의 중학교 현관에는 대부분 개인 신발장이 있어 등교 후 무엇으로 갈아 신는가?","a":"실내화"},{"id":"CU012","unit":"3단원","page":"62쪽","source":"3단원(62쪽)","q":"일본 중학교의 정규 수업에서 하기도 하는 두 가지 과목(활동)은?","a":"서예, 수영"},{"id":"CU013","unit":"3단원","page":"63쪽","source":"3단원(63쪽)","q":"일본 중학교에서 급식 외에 학생들이 점심을 해결하는 두 가지 방법은?","a":"학교 식당에서 사 먹기, 집에서 도시락 싸 오기"},{"id":"CU014","unit":"3단원","page":"63쪽","source":"3단원(63쪽)","q":"일본 중학생들이 방과 후에 대부분 참여하는 ‘동아리 활동’을 일본어로 무엇이라고 하는가?","a":"부카쓰(ぶかつ)"},{"id":"CU015","unit":"3단원","page":"63쪽","source":"3단원(63쪽)","q":"일본 중학교의 동아리 활동은 크게 어떤 두 부서로 나누어져 있는가?","a":"운동부, 문화부"},{"id":"CU016","unit":"3단원","page":"64쪽","source":"3단원(64쪽)","q":"일본의 중·고등학교에서 졸업식 날에 좋아하는 사람에게 남학생 교복의 무엇을 주거나 받는 풍습이 있는가?","a":"두 번째 단추"},{"id":"CU017","unit":"3단원","page":"64쪽","source":"3단원(64쪽)","q":"졸업식 날 교복의 두 번째 단추를 주고받는 이유는 두 번째 단추가 어디와 가장 가까워 ‘좋아하는 사람의 마음을 받는다’는 의미가 있기 때문인가?","a":"심장"},{"id":"CU018","unit":"4단원","page":"75쪽","source":"4단원(75쪽)","q":"일본 사람들이 남에게 무엇인가를 권할 때 즐겨 쓰는 정중한 표현은?","a":"도조(どうぞ)"},{"id":"CU019","unit":"4단원","page":"75쪽","source":"4단원(75쪽)","q":"「どうぞ」가 쓰이는 상황별 의미 다섯 가지(교과서 75쪽 기준) 중 두 가지 이상을 쓰시오.","a":"드세요, 들어오세요, 받으세요, 앉으세요, 먼저 내리세요 (중 2가지 이상)"},{"id":"CU020","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"일본의 신사나 절에 가서 운세를 보기 위해 뽑는 것은?","a":"오미쿠지"},{"id":"CU021","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"일본의 신사나 절에서 소원을 쓰는 오각형 나무판은?","a":"에마"},{"id":"CU022","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"행운이나 건강을 기원하기 위해 구입하는 일본의 부적은?","a":"오마모리"},{"id":"CU023","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"행운과 좋은 인연을 부르며 가게 등에 놓아 두는 고양이 장식물은?","a":"마네키네코"},{"id":"CU024","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"합격이나 당선 등을 기원할 때 자주 사용하며, 소원을 빌 때와 이루어졌을 때 눈을 그려 넣는 인형은?","a":"다루마"},{"id":"CU025","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"‘다루마’에 소원을 빌면서 먼저 그려 넣는 눈은 어느 쪽이고, 소원이 이루어지면 그려 넣는 눈은 어느 쪽인가?","a":"소원을 빌 때: 왼쪽 눈 / 이루어지면: 오른쪽 눈"},{"id":"CU026","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"비가 오지 않기를 바라며 창문에 걸어 두는 일본의 인형은?","a":"데루테루보즈"},{"id":"CU027","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"‘데루테루보즈’ 인형을 거꾸로 매달면 어떤 의미가 되는가?","a":"비가 오기를 기원하는 의미"},{"id":"CU028","unit":"4단원","page":"76쪽","source":"4단원(76쪽)","q":"우리나라의 복조리와 같은 것으로, 곡식을 긁어모으듯이 복을 긁어모은다는 의미로 사업 번창 등을 기원하는 물건은?","a":"구마데"},{"id":"CU029","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"일본에서 칠석(7월 7일)을 부르는 말은?","a":"다나바타"},{"id":"CU030","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"칠석(7월 7일)인 ‘다나바타’에 소원을 써서 대나무에 매다는 종이를 무엇이라고 하는가?","a":"단자쿠"},{"id":"CU031","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"매년 8월 6일~8일에 열리는 ‘다나바타 마쓰리’로 유명한 일본의 지역(도시)은?","a":"센다이"},{"id":"CU032","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"‘이기다(かつ)’라는 말이 들어 있어서 시험이나 시합을 앞두고 합격을 기원하며 먹는 음식은?","a":"돈가스, 돈가스덮밥(가쓰동)"},{"id":"CU033","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"‘놓아두면 패스(おくと パス)’라는 말과 발음이 같아 시험에서 좋은 결과를 바라며 수험생에게 선물하는 것은?","a":"문어(옥토퍼스)"},{"id":"CU034","unit":"4단원","page":"77쪽","source":"4단원(77쪽)","q":"일본어로 ‘합격(ごうかく)’과 발음이 비슷하여 시험 합격을 연상시키기 때문에 수험생 선물로 인기가 많은 물건은?","a":"오각형(고카쿠) 연필"},{"id":"CU035","unit":"4단원","page":"78쪽","source":"4단원(78쪽)","q":"일본에서 러키세븐의 7, 홀수와 함께 끝부분이 넓어지는 모양(八)이라서 운이 좋다고 생각하는 숫자는?","a":"8"},{"id":"CU036","unit":"4단원","page":"78쪽","source":"4단원(78쪽)","q":"일본에서 ‘죽음(死, し)’을 연상시켜 운이 나쁘다고 생각하는 숫자와 ‘고통(苦, く)’을 연상시켜 운이 나쁘다고 생각하는 숫자는?","a":"4(죽음), 9(고통)"},{"id":"CU037","unit":"4단원","page":"78쪽","source":"4단원(78쪽)","q":"일본의 마트 등에서 판매 가격의 끝자리 숫자로 9가 아닌 많이 쓰는 숫자는?","a":"8"},{"id":"CU038","unit":"5단원","page":"89쪽","source":"5단원(89쪽)","q":"일본에서 식사하기 전에 “잘 먹겠습니다”라는 뜻으로 하는 인사말은?","a":"이타다키마스(いただきます)"},{"id":"CU039","unit":"5단원","page":"89쪽","source":"5단원(89쪽)","q":"일본에서 식사한 후에 “잘 먹었습니다”라는 뜻으로 하는 인사말은?","a":"고치소사마데시타(ごちそうさまでした)"},{"id":"CU040","unit":"5단원","page":"89쪽","source":"5단원(89쪽)","q":"일본에서 식사할 때 일반적으로 사용하는 식사 도구는?","a":"젓가락"},{"id":"CU041","unit":"5단원","page":"89쪽","source":"5단원(89쪽)","q":"일본의 식사 예절에서 젓가락으로 하면 안 되는 행동 네 가지 중 두 개 이상을 쓰시오.","a":"음식 건네기, 음식 꽂아 먹기, 그릇 당기기, 그릇 위에 올려놓기 (중 2개 이상)"},{"id":"CU042","unit":"5단원","page":"89쪽","source":"5단원(89쪽)","q":"일본에서는 밥을 먹을 때와 국을 마실 때 그릇을 어떻게 하고 먹는가?","a":"밥그릇은 손에 들고 먹고, 국그릇은 입에 대고 마신다"},{"id":"CU043","unit":"5단원","page":"90쪽","source":"5단원(90쪽)","q":"일본의 초밥은 만드는 모양에 따라 어떤 종류들이 있는가? (2개 이상 쓰시오)","a":"니기리즈시, 후토마키, 데마리즈시, 지라시즈시 (중 2개 이상)"},{"id":"CU044","unit":"5단원","page":"90쪽","source":"5단원(90쪽)","q":"일본의 덮밥은 밥에 얹는 재료에 따라 어떤 종류들이 있는가? (2개 이상 쓰시오)","a":"소고기덮밥, 돈가스덮밥, 닭고기계란덮밥, 튀김덮밥 (중 2개 이상)"},{"id":"CU045","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"채소를 끓인 물에 얇은 소고기를 넣어 젓가락으로 집어 육수에 두세 번 흔들어 익혀 소스에 찍어 먹는 일본의 고기 요리는?","a":"샤부샤부"},{"id":"CU046","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"간장과 설탕으로 맛을 낸 진한 육수에 다양한 채소와 고기를 함께 넣고 끓여 날달걀에 찍어서 먹기도 하는 일본의 고기 요리는?","a":"스키야키"},{"id":"CU047","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"콩을 발효한 음식으로 우리나라의 청국장과 비슷한 일본 음식은?","a":"낫토"},{"id":"CU048","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"다양한 채소를 절여서 만드는 일본의 자주 먹는 반찬은?","a":"쓰케모노"},{"id":"CU049","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"일본의 가정식에서 젓가락은 어느 방향으로 놓는가?","a":"가로 방향"},{"id":"CU050","unit":"5단원","page":"91쪽","source":"5단원(91쪽)","q":"일본의 가정식에서 가족이 함께 식사할 때 상차림의 특징과 음식을 먹을 때의 예의는?","a":"개인별로 상을 차리기도 하며, 음식은 남기지 않는 것이 예의이다"},{"id":"CU051","unit":"5단원","page":"92쪽","source":"5단원(92쪽)","q":"일본에서 행운을 부르는 동물인 여우가 좋아한다고 여겨 ‘유부’를 넣은 우동을 부르는 이름은?","a":"기쓰네(여우)우동"},{"id":"CU052","unit":"5단원","page":"92쪽","source":"5단원(92쪽)","q":"튀김 부스러기를 넣은 우동을 부르는 이름은?","a":"다누키(너구리)우동"},{"id":"CU053","unit":"5단원","page":"92쪽","source":"5단원(92쪽)","q":"달에 비유한 날달걀을 넣은 우동과 구운 떡을 넣은 우동을 각각 무엇이라고 부르는가?","a":"날달걀: 쓰키미(달구경)우동 / 구운 떡: 지카라(힘)우동"}];
+const GAS_ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbyVv8hMnp55ePPs2llWKFTPADPAFnVK3g-tYbcVV29apig8Y1czqyIfJ-msW23b9tPDdg/exec';
+
+let currentClass = '2학년 2반';
+let roundMemo = '';
+let prepTime = 5;
+let qTime = 10;
+let examQuestions = [];
+let examIndex = 0;
+let isPreparing = true;
+let isPaused = false;
+let secondsLeft = 5;
+let timerInterval = null;
+
+const $ = id => document.getElementById(id);
+
+function secureRandomInt(max) {
+  const c = globalThis.crypto;
+  if (c?.getRandomValues) {
+    const limit = Math.floor(0x100000000 / max) * max;
+    const a = new Uint32Array(1);
+    do c.getRandomValues(a); while (a[0] >= limit);
+    return a[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+
+function secureShuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = secureRandomInt(i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateExamSet() {
+  const chosen = secureShuffle(UNITS).slice(0, 20);
+  return chosen.map((u, i) => ({
+    number: i + 1,
+    direction: u.source,
+    prompt: u.q,
+    answer: u.a,
+    id: u.id
+  }));
+}
+
+function fitStagePrompt() {
+  const box = $('stageScreen');
+  const el = $('stagePrompt');
+  const qnum = $('stageQNum');
+  const help = $('stageHelp');
+  if (!box || !el || $('stageView').style.display !== 'flex') return;
+  if (isPreparing) {
+    el.style.fontSize = '';
+    return;
+  }
+  const style = getComputedStyle(box);
+  const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+  const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+  const availW = box.clientWidth - padX - 16;
+  const overheadH = (qnum?.offsetHeight || 0) + (help?.offsetHeight || 0) + 56;
+  const availH = box.clientHeight - padY - overheadH;
+  if (availW <= 0 || availH <= 0) return;
+
+  el.style.maxWidth = availW + 'px';
+  const minPx = 24;
+  const maxPx = Math.min(64, Math.max(32, Math.floor(window.innerWidth * 0.05)));
+  let lo = minPx, hi = maxPx, best = minPx;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    el.style.fontSize = mid + 'px';
+    if (el.scrollWidth <= availW && el.scrollHeight <= availH) {
+      best = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  el.style.fontSize = best + 'px';
+}
+
+window.addEventListener('resize', () => {
+  if ($('stageView').style.display === 'flex') fitStagePrompt();
+});
+
+document.querySelectorAll('#classChips .chip').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#classChips .chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentClass = btn.dataset.class;
+    $('customClassInput').value = currentClass;
+  };
+});
+
+$('customClassInput').oninput = e => {
+  currentClass = e.target.value.trim() || '2학년 2반';
+};
+
+$('startExamBtn').onclick = () => {
+  currentClass = $('customClassInput').value.trim() || '2학년 2반';
+  roundMemo = $('roundMemoInput').value.trim();
+  prepTime = parseInt($('prepTimeSelect').value, 10);
+  qTime = parseInt($('qTimeSelect').value, 10);
+
+  examQuestions = generateExamSet();
+  examIndex = 0;
+  isPreparing = true;
+  isPaused = false;
+  secondsLeft = prepTime;
+
+  $('stageClassBadge').textContent = currentClass;
+  $('stageView').style.display = 'flex';
+  $('resultView').style.display = 'none';
+  $('driveAlert').style.display = 'none';
+  $('saveDriveBtn').disabled = false;
+  $('saveDriveBtn').textContent = '☁️ 구글 드라이브에 저장';
+  $('pauseBtn').textContent = '일시정지 (Space)';
+
+  renderStage();
+  startTimer();
+};
+
+function renderStage() {
+  const timerBadge = $('stageTimerBadge');
+  const bar = $('timeProgressBar');
+
+  timerBadge.textContent = secondsLeft;
+  timerBadge.classList.toggle('urgent', !isPreparing && secondsLeft <= 3);
+
+  const totalSec = isPreparing ? prepTime : qTime;
+  bar.style.width = `${Math.max(0, (secondsLeft / totalSec) * 100)}%`;
+
+  if (isPreparing) {
+    $('stageDirBadge').textContent = '준비';
+    $('stageCounterBadge').textContent = '준비';
+    $('stageQNum').textContent = '생활일본어 문화 수행평가 · 준비';
+    $('stagePrompt').textContent = '준비';
+    $('stagePrompt').className = 'stage-prompt prep';
+    $('stagePrompt').style.fontSize = '';
+    $('stageHelp').innerHTML = `답안지를 준비하세요.<br><b>${secondsLeft}초</b> 뒤 1번 문항이 자동으로 시작됩니다.`;
+    return;
+  }
+
+  const q = examQuestions[examIndex];
+  $('stageDirBadge').textContent = q.direction;
+  $('stageCounterBadge').textContent = `${q.number} / 20`;
+  $('stageQNum').textContent = `제 ${q.number} 번 (${q.direction})`;
+  $('stagePrompt').textContent = q.prompt;
+  $('stagePrompt').className = 'stage-prompt';
+  $('stageHelp').textContent = '질문에 알맞은 정답을 우리말로 답안지에 쓰세요.';
+  requestAnimationFrame(fitStagePrompt);
+}
+
+function startTimer() {
+  stopTimer();
+  timerInterval = setInterval(() => {
+    if (isPaused) return;
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      if (isPreparing) {
+        isPreparing = false;
+        secondsLeft = qTime;
+        renderStage();
+      } else {
+        nextQuestion();
+      }
+    } else {
+      renderStage();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function nextQuestion() {
+  if (isPreparing) return;
+  if (examIndex < 19) {
+    examIndex++;
+    secondsLeft = qTime;
+    renderStage();
+  } else {
+    finishExam();
+  }
+}
+
+function prevQuestion() {
+  if (isPreparing || examIndex <= 0) return;
+  examIndex--;
+  secondsLeft = qTime;
+  renderStage();
+}
+
+function finishExam() {
+  stopTimer();
+  $('stageView').style.display = 'none';
+  $('resultView').style.display = 'block';
+  renderResult();
+  autoSaveToDrive();
+}
+
+$('nextBtn').onclick = nextQuestion;
+$('prevBtn').onclick = prevQuestion;
+$('pauseBtn').onclick = () => {
+  if (isPreparing) return;
+  isPaused = !isPaused;
+  $('pauseBtn').textContent = isPaused ? '계속 진행 (Space)' : '일시정지 (Space)';
+};
+$('abortBtn').onclick = () => {
+  if (confirm('시험을 중단하시겠습니까?')) {
+    stopTimer();
+    $('stageView').style.display = 'none';
+  }
+};
+
+document.addEventListener('keydown', e => {
+  if ($('stageView').style.display !== 'flex') return;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    $('pauseBtn').click();
+  } else if (e.key === 'ArrowRight') {
+    nextQuestion();
+  } else if (e.key === 'ArrowLeft') {
+    prevQuestion();
+  }
+});
+
+function renderResult() {
+  const now = new Date();
+  const dateStr = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0') + ' ' +
+    String(now.getHours()).padStart(2, '0') + ':' +
+    String(now.getMinutes()).padStart(2, '0');
+
+  $('resDate').textContent = dateStr;
+  $('resClassBadge').textContent = currentClass + (roundMemo ? ` (${roundMemo})` : '');
+
+  const tbody = $('answerTbody');
+  tbody.innerHTML = examQuestions.map(q => `
+    <tr>
+      <td class="num">${q.number}</td>
+      <td class="dir">${escapeHtml(q.direction)}</td>
+      <td class="q">${escapeHtml(q.prompt)}</td>
+      <td class="a">${escapeHtml(q.answer)}</td>
+    </tr>
+  `).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+}
+
+async function autoSaveToDrive() {
+  const btn = $('saveDriveBtn');
+  btn.disabled = true;
+  btn.textContent = '☁️ 구글 드라이브 저장 중...';
+
+  try {
+    const payload = {
+      className: currentClass,
+      roundName: roundMemo ? `[2차_문화] ${roundMemo}` : '2학기 2차 문화',
+      questions: examQuestions,
+      timestamp: new Date().toISOString()
+    };
+
+    const res = await fetch(GAS_ENDPOINT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      btn.textContent = '✅ 구글 드라이브 저장 완료';
+      $('driveAlert').style.display = 'block';
+      $('driveFileLink').href = data.fileUrl;
+    } else {
+      throw new Error(data.error || '저장 실패');
+    }
+  } catch (err) {
+    console.error('Drive save error:', err);
+    btn.disabled = false;
+    btn.textContent = '⚠️ 드라이브 재시도 (클릭)';
+    alert('구글 드라이브 자동 저장 중 일시적인 오류가 발생했습니다. 하단의 [PC에 파일 다운로드]로 백업해 두시거나 [구글 드라이브에 저장] 버튼을 다시 눌러주세요.');
+  }
+}
+
+$('saveDriveBtn').onclick = autoSaveToDrive;
+
+$('downloadHtmlBtn').onclick = () => {
+  const htmlContent = document.documentElement.outerHTML;
+  const now = new Date();
+  const dateStr = now.getFullYear() +
+    String(now.getMonth() + 1).padStart(2, '0') +
+    String(now.getDate()).padStart(2, '0') + '_' +
+    String(now.getHours()).padStart(2, '0') +
+    String(now.getMinutes()).padStart(2, '0');
+
+  const fileName = `[${currentClass}]_생활일본어_수행2_문화_정답표_${dateStr}.html`;
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
+$('printResultBtn').onclick = () => window.print();
+
+$('newExamBtn').onclick = () => {
+  $('resultView').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+</script>
+</body>
+</html>
