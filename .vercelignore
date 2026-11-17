@@ -1,2 +1,6 @@
 .env*
 .gitignore
+.tmp*
+data
+scripts
+README.md
